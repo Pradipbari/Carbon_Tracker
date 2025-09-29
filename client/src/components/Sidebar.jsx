@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Profile", path: "/profile" },
   { name: "Activities", path: "/log-activity" },
+  { name: "Leaderboard", path: "/leaderboard" },
 ];
 
 const Sidebar = ({ isMobile, toggleSidebar }) => {
