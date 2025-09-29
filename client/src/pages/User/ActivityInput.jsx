@@ -7,7 +7,7 @@ import {
   getUnitForCategory,
 } from "../../constants/activityData";
 
-const API_URL = "http://localhost:5000/api/activities";
+const API_URL = "https://carbon-tracker-f11b.onrender.com/api/activities";
 
 const ActivityInput = () => {
   const navigate = useNavigate();
