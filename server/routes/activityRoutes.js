@@ -3,6 +3,7 @@ const {
   createActivity,
   getActivities,
   deleteActivity,
+  getLeaderboard
 } = require("../controllers/activityController");
 const { protect } = require("../middleware/authMiddleware"); // Import the protect middleware
 
@@ -15,5 +16,6 @@ router
   .get(protect, getActivities); // GET /api/activities (Get user's activities)
 
 router.route("/:id").delete(protect, deleteActivity); // DELETE /api/activities/:id
+router.get("/leaderboard", getLeaderboard);
 
 module.exports = router;
