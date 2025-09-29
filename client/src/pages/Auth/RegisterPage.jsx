@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://carbon-tracker-f11b.onrender.com/api/auth";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
