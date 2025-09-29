@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
-const API_URL = "http://localhost:5000/api/auth/me";
+const API_URL = "https://carbon-tracker-f11b.onrender.com/api/auth/me";
 
 const ProfilePage = () => {
   // Use a state to hold the fetched profile data
