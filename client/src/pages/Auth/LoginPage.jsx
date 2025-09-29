@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext"; // <-- Must be imported
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://carbon-tracker-f11b.onrender.com/api/auth";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
