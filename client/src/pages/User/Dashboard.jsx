@@ -25,7 +25,7 @@ ChartJS.register(
   LineElement
 );
 
-const API_URL = "http://localhost:5000/api/activities";
+const API_URL = "https://carbon-tracker-f11b.onrender.com/api/activities";
 
 // Helper function to aggregate daily totals (Remains the same)
 const aggregateDailyFootprint = (activities) => {
