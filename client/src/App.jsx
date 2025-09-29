@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
-
+import LeaderboardPage from "./pages/LeaderboardPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import HomePage from "./pages/HomePage";
@@ -30,6 +30,14 @@ function App() {
                   <Dashboard />
                 </Layout>
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <Layout>
+                <LeaderboardPage />
+              </Layout>
             }
           />
           <Route
