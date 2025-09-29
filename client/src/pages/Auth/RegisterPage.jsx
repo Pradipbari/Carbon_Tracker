@@ -1,9 +1,12 @@
 // client/src/pages/Auth/RegisterPage.jsx
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext"; // <-- Import useAuth
 
-const API_URL = "https://carbon-tracker-f11b.onrender.com/api/auth";
+// Get the base URL configured in your VITE environment variable
+const API_BASE = "https://carbon-tracker-f11b.onrender.com";
+const REGISTER_API_URL = `${API_BASE}/api/auth/register`;
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +16,7 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { login } = useAuth(); // <-- Get the centralized login function
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,18 +29,15 @@ const RegisterPage = () => {
 
     try {
       // 1. Send data to the backend API
-      const response = await axios.post(`${API_URL}/register`, formData);
+      // The backend returns { token, user } on success.
+      const response = await axios.post(REGISTER_API_URL, formData);
 
-      // 2. Handle successful registration
-      console.log("Registration successful:", response.data);
+      // 2. CRITICAL FIX: Use the login function to handle state, storage, and navigation
+      login(response.data.token, response.data.user);
 
-      // OPTIONAL: Auto-login by saving token/user data (we'll implement proper context later)
-      localStorage.setItem("token", response.data.token);
-
-      // 3. Redirect the user to the login page or dashboard
-      navigate("/dashboard");
+      // The user is now logged in and redirected to /dashboard!
     } catch (err) {
-      // 4. Handle errors (e.g., user already exists, validation failed)
+      // 3. Handle errors
       const msg =
         err.response?.data?.error ||
         "Registration failed. Please check your inputs.";
@@ -51,10 +51,10 @@ const RegisterPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-green-700">
-          Create an GreenTrack Account
+          Create a GreenTrack Account
         </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Form Inputs (Styled with Tailwind) */}
+          {/* Form Inputs */}
           {Object.keys(formData).map((key) => (
             <div key={key}>
               <input
@@ -82,7 +82,7 @@ const RegisterPage = () => {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out disabled:opacity-50"
             >
-              {loading ? "Registering..." : "Register"}
+              {loading ? "Creating Account..." : "Register"}
             </button>
           </div>
         </form>
