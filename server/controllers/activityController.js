@@ -93,3 +93,59 @@ exports.deleteActivity = async (req, res) => {
     });
   }
 };
+exports.getLeaderboard = async (req, res) => {
+  try {
+    const leaderboard = await Activity.aggregate([
+      {
+        // 1. Group all activities by the user who logged them
+        $group: {
+          _id: "$userId",
+          totalFootprint: { $sum: "$carbonFootprint" }, // Sum all carbon footprints
+        },
+      },
+      {
+        // 2. Sort from lowest footprint to highest (-1 for descending, 1 for ascending)
+        // We use 1 (ascending) because the LOWEST score is the best.
+        $sort: { totalFootprint: 1 },
+      },
+      {
+        // 3. Limit the leaderboard size (e.g., top 100)
+        $limit: 100,
+      },
+      {
+        // 4. Join the Users collection to get the username and email
+        $lookup: {
+          from: "users", // The name of the collection in MongoDB (usually pluralized model name)
+          localField: "_id",
+          foreignField: "_id",
+          as: "userProfile",
+        },
+      },
+      {
+        // 5. Deconstruct the userProfile array (since $lookup returns an array)
+        $unwind: "$userProfile",
+      },
+      {
+        // 6. Reshape the output document
+        $project: {
+          _id: 0, // Exclude the generated _id field
+          username: "$userProfile.username",
+          email: "$userProfile.email",
+          totalFootprint: { $round: ["$totalFootprint", 2] }, // Round to 2 decimal places
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: leaderboard,
+    });
+  } catch (error) {
+    console.error("Leaderboard Aggregation Error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to generate leaderboard.",
+    });
+  }
+};
+
